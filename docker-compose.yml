@@ -1,0 +1,32 @@
+version: "3"
+services:
+  django_service:
+    image: django:v1
+    container_name: djano_mysql_django
+   # hostname: django_service
+    restart: always
+    command: python /mydjango/manage.py runserver 0.0.0.0:8000
+   # volumes:
+   #   - /home/docker/django+mysql/mydjango:/mydjango
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql_service 
+
+
+  mysql_service:
+    image: docker.io/wanghao7/mysql
+    container_name: django_mysql_mysql
+   # host_name: mysql_service
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password --mysqlx=0
+   #docker的安全验证
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_HOST=localhost 
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=django
+      - MYSQL_ROOT_PASSWORD=123456
